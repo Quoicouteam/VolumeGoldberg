@@ -4,7 +4,7 @@
       :animation-rate="progress"
     ></spinner>
     <lever
-        :model-value="progress"
+        v-model="progress"
     ></lever>
   </div>
 </template>
@@ -28,22 +28,29 @@ export default {
 </script>
 
 <style scoped>
-  .patiphon-box {
-    padding: 10px 0 0 10px;
-    width: 300px;
-    height: 250px;
-    border-radius: 5px;
-    display: flex;
-    justify-content: space-between;
-  }
-  .gofra {
-    background: repeating-linear-gradient(
-        90deg,
-        #0b0b0b,
-        #393737 5px,
-        #000000 5px,
-        #393737 10px
-    );
-    box-shadow: inset 0 5px 10px rgba(0,0,0,0.2);
-  }
+.patiphon-box {
+  padding: 10px 0 0 10px;
+  width: 300px;
+  height: 250px;
+  border-radius: 8px;
+
+  display: flex;
+  justify-content: space-between;
+
+  background: #1b1b1b;
+  box-shadow:
+      0 4px 12px rgba(0,0,0,0.5),
+      inset 0 6px 12px rgba(255,255,255,0.05),
+      inset 0 -6px 12px rgba(0,0,0,0.4);
+}
+
+.gofra {
+  background: repeating-linear-gradient(
+      90deg,
+      #0e0e0e,
+      #2c2c2c 5px,
+      #000000 5px,
+      #2c2c2c 10px
+  );
+}
 </style>

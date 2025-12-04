@@ -1,8 +1,11 @@
 <template>
   <div class="lever-block">
-    <div class="lever" ref="leverBlock" :style="{
-      transform: `translateX(-50%) rotate(${angle}deg)`,
-    }" @mousedown='startDrag'>
+    <div
+        class="lever"
+        ref="leverBlock"
+        :style="{ transform: `translateX(-50%) rotate(${angle}deg)` }"
+        @mousedown="startDrag"
+    >
       <div class="dot"></div>
       <div class="dot-fixation"></div>
     </div>
@@ -11,120 +14,170 @@
 
 <script>
 export default {
+  name: "Lever",
   props: {
-    modelValue: {type: Number, default: 0},
+    modelValue: { type: Number, default: 0 }
   },
-  data () {
+  emits: ["update:modelValue"],
+
+  data() {
     return {
       dragging: false,
       angle: 0,
-      modelValue: 0,
-      intervalId: null,
-      localValue: this.modelValue,
-    }
+
+      increaseTimer: null,
+      decayTimer: null,
+
+      localValue: this.modelValue
+    };
   },
-  emits: ['update:modelValue'],
-  methods: {
-    startDrag () {
-      this.dragging = true
-      window.addEventListener('mousemove', this.onDrag)
-      window.addEventListener('mouseup', this.stopDrag)
-      this.startProgressTimer()
-    },
-    startProgressTimer() {
-      // защищаемся от дублирования интервалов
-      if (this.intervalId) return
 
-      this.intervalId = setInterval(() => {
-        this.modelValue++
-        this.$emit('update:modelValue', this.modelValue)
-      }, 2000)
-    },
-    onDrag(e) {
-      if (!this.dragging) return
-
-      const rect = this.$refs.leverBlock.getBoundingClientRect()
-      const centerX = rect.left + rect.width / 2
-      const centerY = rect.bottom
-
-      const dx = e.clientX - centerX
-      const dy = e.clientY - centerY // инвертируем Y для инверсии направления
-
-      // вычисляем угол в градусах, инвертированное направление
-      let newAngle = Math.atan2(dy, dx) * (180 / Math.PI)
-
-      // приводим угол к диапазону 0–360°
-      if (newAngle < 0) newAngle += 360
-
-      this.angle = newAngle
-
-      console.log(this.modelValue)
-    },
-    stopDrag() {
-      this.dragging = false
-      window.removeEventListener('mousemove', this.onDrag)
-      window.removeEventListener('mouseup', this.stopDrag)
-      clearInterval(this.intervalId)
-      this.intervalId = null
-    }
-  },
   watch: {
-    modelValue (v) {
-      this.localValue = v
+    modelValue(v) {
+      this.localValue = v;
+    }
+  },
+
+  methods: {
+    startDrag() {
+      if (this.dragging) return;
+
+      this.dragging = true;
+
+      // отключаем уменьшение, если оно работает
+      this.stopDecay();
+
+      window.addEventListener("mousemove", this.onDrag);
+      window.addEventListener("mouseup", this.stopDrag);
+
+      this.startIncrease();
+    },
+
+    startIncrease() {
+      if (this.increaseTimer) return;
+
+      this.increaseTimer = setInterval(() => {
+        this.localValue++;
+        this.$emit("update:modelValue", this.localValue);
+      }, 2000);
+    },
+
+    stopIncrease() {
+      if (this.increaseTimer) {
+        clearInterval(this.increaseTimer);
+        this.increaseTimer = null;
+      }
+    },
+
+    startDecay() {
+      if (this.decayTimer) return;
+
+      this.decayTimer = setInterval(() => {
+        if (this.localValue > 0) {
+          this.localValue--;
+          this.$emit("update:modelValue", this.localValue);
+        } else {
+          this.stopDecay();
+        }
+      }, 2000);
+    },
+
+    stopDecay() {
+      if (this.decayTimer) {
+        clearInterval(this.decayTimer);
+        this.decayTimer = null;
+      }
+    },
+
+    onDrag(e) {
+      if (!this.dragging) return;
+
+      const rect = this.$refs.leverBlock.getBoundingClientRect();
+      const centerX = rect.left + rect.width / 2;
+      const centerY = rect.bottom;
+
+      const dx = e.clientX - centerX;
+      const dy = e.clientY - centerY;
+
+      let newAngle = Math.atan2(dy, dx) * (180 / Math.PI);
+      if (newAngle < 0) newAngle += 360;
+
+      this.angle = newAngle;
+    },
+
+    stopDrag() {
+      this.dragging = false;
+
+      window.removeEventListener("mousemove", this.onDrag);
+      window.removeEventListener("mouseup", this.stopDrag);
+
+      this.stopIncrease();
+      this.startDecay(); // ← включаем плавное уменьшение
     }
   }
-}
+};
 </script>
 
 <style scoped>
-  .lever-block {
-    position: relative;
-    width: 30px;       /* ширина блока рычага */
-    height: 200px;     /* высота блока рычага */
-    padding: 15px;
-  }
-  .lever {
-    position: absolute;
-    width: 5px;
-    height: 15%;
-    background-color: #f2f2f2;
-    bottom: 20%;
-    left: 50%;
-    transform: translateX(-50%);
-    transform-origin: bottom center;
-    border-radius: 5px;
-    cursor: grab;
-  }
+.lever-block {
+  position: relative;
+  width: 40px;
+  height: 200px;
+  padding: 15px;
+}
 
-  .rotation {
-    animation: rotate 3s infinite linear;
-  }
+.lever {
+  position: absolute;
+  width: 6px;
+  height: 100px;
 
-  .dot {
-    position: absolute;
-    top: 0; /* расположение наверху рычага */
-    left: 50%;
-    transform: translate(-50%, -50%); /* чтобы центр точки совпадал с верхом рычага */
-    height: 10px;  /* размер точки */
-    width: 10px;
-    border-radius: 50%;
-    background-color: brown;
-  }
+  background: linear-gradient(to bottom, #d6d6d6, #9b9b9b);
+  border-radius: 3px;
+  bottom: 20%;
+  left: 50%;
+  transform: translateX(-50%);
+  transform-origin: bottom center;
+  cursor: grab;
 
-  .dot-fixation {
-    position: absolute;
-    bottom: 0;
-    left: 50%;
-    right: 50%;
-    transform: translate(-60%, 10%);
-    height: 5px;
-    width: 5px;
-    border-radius: 50%;
-    background-color: #000000;
-  }
+  box-shadow:
+      inset 0 0 3px rgba(255,255,255,0.7),
+      inset 0 -3px 4px rgba(0,0,0,0.3),
+      0 3px 10px rgba(0,0,0,0.4);
+}
 
-  @keyframes rotate {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
-  }
+.lever:active {
+  cursor: grabbing;
+}
+
+/* верхняя ручка */
+.dot {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  height: 16px;
+  width: 16px;
+  border-radius: 50%;
+
+  background: radial-gradient(circle at 30% 30%, #ffffffaa, #222);
+
+  box-shadow:
+      0 4px 6px rgba(0,0,0,0.4),
+      inset 0 0 6px rgba(255,255,255,0.4);
+}
+
+.dot-fixation {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translate(-50%, 6px);
+  height: 8px;
+  width: 8px;
+  border-radius: 50%;
+  background: #222;
+
+  box-shadow:
+      0 2px 4px rgba(0,0,0,0.6),
+      inset 0 0 4px rgba(255,255,255,0.2);
+}
 </style>
