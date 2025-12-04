@@ -1,14 +1,12 @@
 <template>
-  <div class="wrapper">
-    <spinner></spinner>
-  </div>
+  <patiphon />
 </template>
 
 <script>
-import Spinner from "@/components/Spinner.vue";
+import Patiphon from "@/components/Patiphon.vue";
 export default {
   components: {
-    Spinner,
+    Patiphon,
   }
 }
 </script>
