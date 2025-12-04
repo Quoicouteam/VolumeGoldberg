@@ -1,19 +1,27 @@
 <template>
   <div class="patiphon-box gofra">
-    <spinner></spinner>
+    <spinner
+      :animation-rate="progress"
+    ></spinner>
+    <lever
+        :model-value="progress"
+    ></lever>
   </div>
 </template>
 
 <script>
 import Spinner from "@/components/Spinner.vue";
+import Lever from "@/components/Lever.vue";
 export default {
   components: {
-    Spinner
+    Spinner,
+    Lever
   },
   data () {
     return {
       width: 400,
-      height: 250
+      height: 250,
+      progress: 0
     }
   }
 }
@@ -25,6 +33,8 @@ export default {
     width: 300px;
     height: 250px;
     border-radius: 5px;
+    display: flex;
+    justify-content: space-between;
   }
   .gofra {
     background: repeating-linear-gradient(

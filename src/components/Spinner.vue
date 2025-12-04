@@ -17,6 +17,9 @@
 
 <script>
 export default {
+  props: {
+    animationRate: {type: Number},
+  },
   data() {
     return {
       rings: [180, 160, 140, 120, 100, 80, 60]
