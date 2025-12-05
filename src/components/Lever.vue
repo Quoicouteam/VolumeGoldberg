@@ -1,5 +1,10 @@
 <template>
   <div class="lever-block">
+    <!-- Тройной семисегментный индикатор -->
+    <seven-segment-counter :digit="digits[0]" />
+    <seven-segment-counter :digit="digits[1]" />
+    <seven-segment-counter :digit="digits[2]" />
+
     <div
         class="lever"
         ref="leverBlock"
@@ -13,8 +18,10 @@
 </template>
 
 <script>
+import SevenSegmentCounter from "@/components/SevenSegmentCounter.vue";
+
 export default {
-  name: "Lever",
+  components: { SevenSegmentCounter },
   props: {
     modelValue: { type: Number, default: 0 }
   },
@@ -24,12 +31,19 @@ export default {
     return {
       dragging: false,
       angle: 0,
-
       increaseTimer: null,
       decayTimer: null,
-
       localValue: this.modelValue
     };
+  },
+
+  computed: {
+    // Массив цифр для трёх семисегментных индикаторов
+    digits() {
+      const val = Math.max(0, Math.min(100, Math.floor(this.localValue))); // ограничение 0-100
+      const str = val.toString().padStart(3, "0"); // добавляем ведущие нули
+      return str.split("").map(Number);
+    }
   },
 
   watch: {
@@ -41,10 +55,7 @@ export default {
   methods: {
     startDrag() {
       if (this.dragging) return;
-
       this.dragging = true;
-
-      // отключаем уменьшение, если оно работает
       this.stopDecay();
 
       window.addEventListener("mousemove", this.onDrag);
@@ -57,9 +68,11 @@ export default {
       if (this.increaseTimer) return;
 
       this.increaseTimer = setInterval(() => {
-        this.localValue++;
-        this.$emit("update:modelValue", this.localValue);
-      }, 2000);
+        if (this.localValue < 100) {
+          this.localValue++;
+          this.$emit("update:modelValue", this.localValue);
+        }
+      }, 200);
     },
 
     stopIncrease() {
@@ -79,7 +92,7 @@ export default {
         } else {
           this.stopDecay();
         }
-      }, 2000);
+      }, 200);
     },
 
     stopDecay() {
@@ -107,12 +120,11 @@ export default {
 
     stopDrag() {
       this.dragging = false;
-
       window.removeEventListener("mousemove", this.onDrag);
       window.removeEventListener("mouseup", this.stopDrag);
 
       this.stopIncrease();
-      this.startDecay(); // ← включаем плавное уменьшение
+      this.startDecay();
     }
   }
 };

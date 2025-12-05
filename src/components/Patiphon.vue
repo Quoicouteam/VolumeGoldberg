@@ -3,6 +3,7 @@
     <spinner
       :animation-rate="progress"
     ></spinner>
+    <toneram/>
     <lever
         v-model="progress"
     ></lever>
@@ -12,10 +13,12 @@
 <script>
 import Spinner from "@/components/Spinner.vue";
 import Lever from "@/components/Lever.vue";
+import Toneram from "@/components/Toneram.vue";
 export default {
   components: {
     Spinner,
-    Lever
+    Lever,
+    Toneram,
   },
   data () {
     return {
