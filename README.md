@@ -1,38 +1,66 @@
-# volume_goldberg
+# 🎧 Volume Goldberg — Machine de Rube Goldberg audio
 
-This template should help get you started developing with Vue 3 in Vite.
+> Une machine de Rube Goldberg, c’est-à-dire une façon bien trop compliquée d’arriver à un résultat.  
+> Ici : contrôler le volume audio du système via une interface artistique composée de leviers, engrenages et animations inspirées d’un vieux phonographe.
 
-## Recommended IDE Setup
+---
 
-[VS Code](https://code.visualstudio.com/) + [Vue (Official)](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
 
-## Recommended Browser Setup
+---
 
-- Chromium-based browsers (Chrome, Edge, Brave, etc.):
-  - [Vue.js devtools](https://chromewebstore.google.com/detail/vuejs-devtools/nhdogjmejiglipccpnnnanhbledajbpd) 
-  - [Turn on Custom Object Formatter in Chrome DevTools](http://bit.ly/object-formatters)
-- Firefox:
-  - [Vue.js devtools](https://addons.mozilla.org/en-US/firefox/addon/vue-js-devtools/)
-  - [Turn on Custom Object Formatter in Firefox DevTools](https://fxdx.dev/firefox-devtools-custom-object-formatters/)
+## 👀 Aperçu
 
-## Customize configuration
+Ce projet représente un contrôleur audio entièrement animé :
+- une platine avec disque rotatif,
+- un bras/toneram articulé,
+- un levier mécanique servant de contrôle de volume,
+- un châssis façon phonographe vintage avec texture métallisée et gaufre géométrique.
 
-See [Vite Configuration Reference](https://vite.dev/config/).
+Le tout fonctionne comme une **machine de Rube Goldberg**, c’est-à-dire une suite d’actions visuelles et absurdes pour accomplir une tâche triviale : modifier le volume.
 
-## Project Setup
+---
+
+## ✨ Fonctionnalités
+
+- 📀 *Animation du disque (Spinner)* en fonction du volume
+- 🎚️ *Levier interactif* (Lever) utilisant `v-model`
+- 🎛️ Composants stylisés (métal, parallélépipède 3D, interrupteurs)
+- 🔊 Intégration avec un système audio externe
+- 🎥 Animations CSS et transitions synchronisées
+- 🧩 Compatible Vue 3 & Composition API
+
+---
+
+## 🛠️ Technologies utilisées
+
+- **Vue 3** (Composition API + Single File Components)
+- **Vite**
+- **JavaScript**
+- **CSS moderne (gradients, ombres, textures)**
+
+---
+
+## 📥 Installation
 
 ```sh
 npm install
-```
-
-### Compile and Hot-Reload for Development
-
-```sh
 npm run dev
 ```
 
-### Compile and Minify for Production
+## 🧩 Usage 
+Passez par l'adresse http://localhost:5173/
 
+
+## 📁 Structure du projet
 ```sh
-npm run build
+src/
+├── components/
+│    ├── goldberg_audio/
+│    │     ├── Patiphon.vue        # composant principal de la machine
+│    │     ├── Lever.vue           # levier (volume)
+│    │     ├── Spinner.vue         # disque rotatif
+│    │     └── Toneram.vue         # bras/toneram
+│    └── ...
+├── App.vue
+└── main.js
 ```
