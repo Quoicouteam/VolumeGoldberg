@@ -69,10 +69,10 @@ export default {
 
       this.increaseTimer = setInterval(() => {
         if (this.localValue < 100) {
-          this.localValue++;
+          this.localValue+=0.4;
           this.$emit("update:modelValue", this.localValue);
         }
-      }, 200);
+      }, 50);
     },
 
     stopIncrease() {
@@ -87,12 +87,12 @@ export default {
 
       this.decayTimer = setInterval(() => {
         if (this.localValue > 0) {
-          this.localValue--;
+          this.localValue-=0.4;
           this.$emit("update:modelValue", this.localValue);
         } else {
           this.stopDecay();
         }
-      }, 200);
+      }, 50);
     },
 
     stopDecay() {
@@ -141,7 +141,7 @@ export default {
 .lever {
   position: absolute;
   width: 6px;
-  height: 100px;
+  height: 50px;
 
   background: linear-gradient(to bottom, #d6d6d6, #9b9b9b);
   border-radius: 3px;
